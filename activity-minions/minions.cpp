@@ -10,11 +10,12 @@ int main (int argc, char** argv) {
     return -1;
   }
   //Your code goes here
-  for (int i = 0; i < argc[1]; i++) {
+  int num = atoi(argv[2]);
+  for (int i = 0; i < num; i++) {
       std::thread gru[i](f, i);
   }
 
-  for (int i = 0; i < argc[1]; i++) {
+  for (int i = 0; i < num; i++) {
       std::thread gru[i].join();
   }
 
