@@ -15,11 +15,11 @@ int main(int argc, char** argv) {
 
     std::thread gru[num];
 
-    for (int i = 0; i < num; i++) {
-        gru[i] = std::thread(f, i + 1);
+    for (int i = 0; i < num; ++i) {
+        gru[i] = std::thread(f, i);
     }
 
-    for (int i = 0; i < num; i++) {
+    for (int i = 0; i < num; ++i) {
         gru[i].join();
     }
     std::cout << "hello minions! I am the Overlord!" << std::endl;
