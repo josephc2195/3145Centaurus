@@ -73,19 +73,20 @@ int main(int argc, char **argv)
   MyHashtable<std::string, int> ht;
   Dictionary<std::string, int>& dict = ht;
 
-
-
   // write code here
+  auto start = std::chrono::steady_clock::now();
 
+  for(auto & filecontent: wordmap) {
+    for(auto & w: filecontent) {
+      int count = dict.get(w);
+      ++count;
+      dict.set(w, count);
+    }
+  }
 
-
-
-
-
-
-
-
-
+  auto stop = std::chrono::steady_clock::now();
+  std::chrono::duration<double> total_time = stop-start;
+  
   // Check Hash Table Values 
   /* (you can uncomment, but this must be commented out for tests)
   for (auto it : dict) {
