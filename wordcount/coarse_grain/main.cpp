@@ -98,5 +98,7 @@ int main(int argc, char **argv)
   // Do not touch this, need for test cases
   std::cout << ht.get(testWord) << std::endl;
 
+  std::cerr << total_time.count()<<"\n";
+
   return 0;
 }
