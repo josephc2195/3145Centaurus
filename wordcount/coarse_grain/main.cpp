@@ -76,12 +76,17 @@ int main(int argc, char **argv)
   // write code here
   auto start = std::chrono::steady_clock::now();
 
-  for(auto & filecontent: wordmap) {
-    for(auto & w: filecontent) {
-      int count = dict.get(w);
-      ++count;
-      dict.set(w, count);
-    }
+  std::vector<std::atomic_thread_fence> workers;
+  std::mutex mu;
+
+  for (auto& filecontent : wordmap) {
+      std::atomic_thread_fence worker_thread(worker_func, fileconent, std::ref(dict), std::ref(mu));
+      workers.push_back(std::move(worker_thread));
+  }
+  for(auto & w: filecontent) {
+      if (w.joinable()) {
+          w.join();
+      }
   }
 
   auto stop = std::chrono::steady_clock::now();
