@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   std::mutex mu;
 
   for (auto& filecontent : wordmap) {
-      std::thread t (count_words, fileconent, std::ref(fileconent), std::ref(dict), std::ref(mut));
+      std::thread t (count_words, filecontent, std::ref(filecontent), std::ref(dict), std::ref(mu));
       thrds.push_back(std::move(t));
   }
   for(auto & w: thrds) {
