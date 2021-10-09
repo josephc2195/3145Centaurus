@@ -89,11 +89,11 @@ int main(int argc, char **argv)
   std::vector<std::thread> thrds;
   std::mutex mu;
 
-  for (auto& filecontent : wordmap) {
-      std::thread t (count_words, filecontent, std::ref(filecontent), std::ref(dict), std::ref(mu));
+  for (auto & filecontent: wordmap) {
+      std::thread t (count_words, filecontent, std::ref(dict), std::ref(mu));
       thrds.push_back(std::move(t));
   }
-  for(auto & w: thrds) {
+  for(auto & w : thrds) {
       if (w.joinable()) {
           w.join();
       }
