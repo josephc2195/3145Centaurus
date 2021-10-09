@@ -78,14 +78,14 @@ int main(int argc, char **argv)
   // write code here
   auto start = std::chrono::steady_clock::now();
 
-  std::vector<std::thread> workers;
+  std::vector<std::thread> thrds;
   std::mutex mu;
 
   for (auto& filecontent : wordmap) {
-      std::thread worker_thread(worker_func, fileconent, std::ref(dict), std::ref(mu));
-      workers.push_back(std::move(worker_thread));
+      std::thread t (count_words, fileconent, std::ref(fileconent), std::ref(dict), std::ref(mut));
+      thrds.push_back(std::move(t));
   }
-  for(auto & w: filecontent) {
+  for(auto & w: thrds) {
       if (w.joinable()) {
           w.join();
       }
