@@ -76,11 +76,11 @@ int main(int argc, char **argv)
   // write code here
   auto start = std::chrono::steady_clock::now();
 
-  std::vector<std::atomic_thread_fence> workers;
+  std::vector<std::thread> workers;
   std::mutex mu;
 
   for (auto& filecontent : wordmap) {
-      std::atomic_thread_fence worker_thread(worker_func, fileconent, std::ref(dict), std::ref(mu));
+      std::thread worker_thread(worker_func, fileconent, std::ref(dict), std::ref(mu));
       workers.push_back(std::move(worker_thread));
   }
   for(auto & w: filecontent) {
