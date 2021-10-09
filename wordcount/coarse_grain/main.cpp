@@ -48,7 +48,7 @@ std::vector<std::vector<std::string>> tokenizeLyrics(const std::vector<std::stri
 }
 
 void count_words(std::vector<std::string> filecontent, Dictionary<std::string, int>& the_dic, std::mutex& mu) {
-  for auto & w : filecontent) {
+  for(auto & w : filecontent) {
     mu.lock();
     int count = the_dic.get(w);
     ++count;
@@ -89,7 +89,7 @@ int main(int argc, char **argv)
   std::vector<std::thread> thrds;
   std::mutex mu;
 
-  for (auto & filecontent: wordmap) {
+  for(auto & filecontent: wordmap) {
       std::thread t (count_words, filecontent, std::ref(dict), std::ref(mu));
       thrds.push_back(std::move(t));
   }
