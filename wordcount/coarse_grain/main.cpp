@@ -47,7 +47,15 @@ std::vector<std::vector<std::string>> tokenizeLyrics(const std::vector<std::stri
   return ret;
 }
 
-
+void count_words(std::vector<std::string)> filecontent, dictionary<std::string, int> & the_dic, std::mutex& mu) {
+  for auto & w : filecontent) {
+    mu.lock();
+    int count = the_dic.get(w);
+    ++count;
+    the_dic.set(w, count);
+    mu.unlock();
+  }
+}
 
 int main(int argc, char **argv)
 {
