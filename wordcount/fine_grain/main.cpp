@@ -50,7 +50,7 @@ std::vector<std::vector<std::string>> tokenizeLyrics(const std::vector<std::stri
 }
 
 void word_count(std::vector<std::string>& filecontent, Dictionary<std::string, int>& dict) {
-  for(auto & w : filecontent) {
+  for(auto& w : filecontent) {
     dict.update(w);
   }
 }
