@@ -7,8 +7,6 @@
 #include <vector>
 #include <mutex>
 
-mutable std::mutex mutexArray[256];
-
 template<class K, class V>
 struct Node {
   K key;
@@ -32,6 +30,8 @@ protected:
   int count;
   double loadFactor;
   std::vector<Node<K,V>*> table;
+
+  mutable std::mutex mutexArray[256];
 
   struct hashtable_iter : public dict_iter {
     MyHashtable& mt;
