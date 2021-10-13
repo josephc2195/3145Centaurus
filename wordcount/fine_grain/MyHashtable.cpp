@@ -7,7 +7,7 @@
 #include <vector>
 #include <mutex>
 
-extern std::mutex mutexArray [256];
+mutable std::mutex mutexArray[256];
 
 template<class K, class V>
 struct Node {
@@ -147,6 +147,40 @@ public:
       this->resize(this->capacity * 2);
     }
   }
+
+  virtual void increment(const K& key) { 
+    std::size_t index = std::has<K>{}(key) % this->capacity;
+    index = index<0? index + this->capacity : index;
+    Node<K,V>* node = this->table[index];
+
+    std::size_t mutex_index = std::hash<K>{}(key) % 256;
+
+    mutexArray[mutex_index].lock();
+
+    V value_obj = V();
+    bool node_found = false;
+    while (node != nullptr) {
+      if(node->key == key) {
+        value_obj = node->value;
+        node_found - true;
+        break;
+      }
+      node = node->next;
+    }
+
+    if (node_found == false) { 
+      node = new Node<K,V>(key, 0);
+      node->next = this->table[index];
+      this->table[index] = node;
+      this->count++;
+    }
+
+    value_obj++;
+
+    node->value = value_obj;
+    mutexArray[mutex_index].unlock();
+  }
+}
 
   /**
    * deletes the node at given key

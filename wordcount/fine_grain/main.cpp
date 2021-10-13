@@ -8,8 +8,6 @@
 #include "Dictionary.cpp"
 #include "MyHashtable.cpp"
 
-std::mutex mutexArray [256];
-
 //Tokenize a string into individual word, removing punctuation at the
 //end of words
 std::vector<std::vector<std::string>> tokenizeLyrics(const std::vector<std::string> files) {
@@ -49,9 +47,9 @@ std::vector<std::vector<std::string>> tokenizeLyrics(const std::vector<std::stri
   return ret;
 }
 
-void word_count(std::vector<std::string>& filecontent, Dictionary<std::string, int>& dict) {
-  for(auto& w : filecontent) {
-    dict.update(w);
+void word_count(std::vector<std::string>& filecontent, Dictionary<std::string, int>& the_dic) {
+  for(auto & w : filecontent) {
+    the_dic.increment(w);
   }
 }
 
@@ -87,12 +85,14 @@ int main(int argc, char **argv)
   std::vector<std::thread> t;
 
   for(auto & filecontent: wordmap) {
-      t.push_back(std::thread(word_count, std::ref(filecontent), std::ref(dict)));
+    std::thread worker (word_count, filecontent, std::ref(dict));
+    t.push_back(std::move(worker)
   }
 
   for(auto & w : t) {
+    if (w.joinable()) {
       w.join();
-
+    }
   }
 
   auto stop = std::chrono::steady_clock::now();
