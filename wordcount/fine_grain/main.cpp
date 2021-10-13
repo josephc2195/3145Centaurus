@@ -86,7 +86,7 @@ int main(int argc, char **argv)
 
   for(auto & filecontent: wordmap) {
     std::thread worker (word_count, filecontent, std::ref(dict));
-    t.push_back(std::move(worker);
+    t.push_back(std::move(worker));
   }
 
   for(auto & w : t) {
