@@ -5,6 +5,9 @@
 #include <functional>
 #include <iostream>
 #include <vector>
+#include <mutex>
+
+extern std::mutex mutexArray [256];
 
 template<class K, class V>
 struct Node {
