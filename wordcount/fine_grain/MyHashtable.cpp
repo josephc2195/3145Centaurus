@@ -162,7 +162,7 @@ public:
     while (node != nullptr) {
       if(node->key == key) {
         value_obj = node->value;
-        node_found - true;
+        node_found = true;
         break;
       }
       node = node->next;
@@ -180,7 +180,6 @@ public:
     node->value = value_obj;
     mutexArray[mutex_index].unlock();
   }
-}
 
   /**
    * deletes the node at given key
