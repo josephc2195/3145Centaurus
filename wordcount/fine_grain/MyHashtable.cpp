@@ -149,7 +149,7 @@ public:
   }
 
   virtual void increment(const K& key) { 
-    std::size_t index = std::has<K>{}(key) % this->capacity;
+    std::size_t index = std::hash<K>{}(key) % this->capacity;
     index = index<0? index + this->capacity : index;
     Node<K,V>* node = this->table[index];
 
