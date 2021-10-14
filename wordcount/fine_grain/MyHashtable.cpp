@@ -178,7 +178,7 @@ public:
     v_obj++;
 
     node->value = v_obj;
-    mutexArray[mutex_index].unlock();
+    mutexArray[mutex_i].unlock();
   }
 
   /**
