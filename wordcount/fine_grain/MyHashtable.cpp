@@ -150,34 +150,34 @@ public:
 
   virtual void increment(const K& key) { 
     std::size_t index = std::hash<K>{}(key) % this->capacity;
-    index = index<0? index + this->capacity : index;
+    index = index < 0? index + this->capacity : index;
     Node<K,V>* node = this->table[index];
 
-    std::size_t mutex_index = std::hash<K>{}(key) % 256;
+    std::size_t mutex_i = std::hash<K>{}(key) % 256;
 
-    mutexArray[mutex_index].lock();
+    mutexArray[mutex_i].lock();
 
-    V value_obj = V();
-    bool node_found = false;
+    V v_obj = V();
+    bool found = false;
     while (node != nullptr) {
       if(node->key == key) {
-        value_obj = node->value;
-        node_found = true;
+        v_obj = node->value;
+        found = true;
         break;
       }
       node = node->next;
     }
 
-    if (node_found == false) { 
+    if (found == false) { 
       node = new Node<K,V>(key, 0);
       node->next = this->table[index];
       this->table[index] = node;
       this->count++;
     }
 
-    value_obj++;
+    v_obj++;
 
-    node->value = value_obj;
+    node->value = v_obj;
     mutexArray[mutex_index].unlock();
   }
 
