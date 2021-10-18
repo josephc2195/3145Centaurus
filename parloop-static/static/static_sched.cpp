@@ -26,6 +26,22 @@ int main (int argc, char* argv[]) {
     std::cerr<<"usage: "<<argv[0]<<" <functionid> <a> <b> <n> <intensity> <nbthreads>"<<std::endl;
     return -1;
   }
+  int functionID = atoi(argv[1]);
+  float a = atoi(argv[2]);
+  float b = atoi(argv[3]);
+  float n = atof(argv[4]);
+  int intesity = atoi(argv[5]);
+  int nbthreads = atoi(argv[6]);
+  float x = 0;
+  float integral = 0;
+
+  auto start = std::chrono::steady_clock::now();
+
+
+  auto stop = std::chrono::steady_clock::now();
+  std::chrono::duration<double> total_time = stop - start;
+
+  std::cerr << total_time.count() << std::endl;
   
   return 0;
 }
