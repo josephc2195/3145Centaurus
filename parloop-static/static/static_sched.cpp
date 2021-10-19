@@ -4,6 +4,7 @@
 #include <string.h>
 #include <chrono>
 #include <cmath>
+#include "seq_loop.hpp"
 
 
 #ifdef __cplusplus
@@ -34,6 +35,9 @@ int main (int argc, char* argv[]) {
   int nbthreads = atoi(argv[6]);
   float x = 0;
   float integral = 0;
+  float t1 = (b - a) / n;
+  float sum = 0;
+
 
   auto start = std::chrono::steady_clock::now();
 
