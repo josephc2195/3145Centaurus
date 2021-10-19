@@ -31,7 +31,7 @@ int main (int argc, char* argv[]) {
   float a = atoi(argv[2]);
   float b = atoi(argv[3]);
   float n = atof(argv[4]);
-  int intesity = atoi(argv[5]);
+  int intensity = atoi(argv[5]);
   int nbthreads = atoi(argv[6]);
   float x = 0;
   float integral = 0;
@@ -41,7 +41,38 @@ int main (int argc, char* argv[]) {
 
   auto start = std::chrono::steady_clock::now();
 
+  SeqLoop s1;
 
+  s1.parfor<float>(
+      0, n, 1, nbthreads,
+      [&](float& tls) -> void {
+          tls = 0.0;
+      },
+      [&](int i, float& tls) ->void {
+          float x = a + (i + .5) * t1;
+          switch (functionID)
+          {
+          case 1:
+              tls += f1(x, intensity);
+              break;
+          case 2:
+              tls += f2(x, intensity);
+              break;
+          case 3:
+              tls += f3(x, intensity);
+              break;
+          case 4:
+              tls += f4(x, intensity);
+              break;
+
+          }
+
+      },
+          [&](float& tls) -> void {
+          sum += tls;
+      });
+
+  std::cout << t1 * sum << std::endl;
   auto stop = std::chrono::steady_clock::now();
   std::chrono::duration<double> total_time = stop - start;
 
