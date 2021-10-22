@@ -74,9 +74,8 @@ int main (int argc, char* argv[]) {
 
   std::cout << t1 * sum << std::endl;
   auto stop = std::chrono::steady_clock::now();
-  std::chrono::duration<double> total_time = stop - start;
 
-  std::cerr << total_time.count() << std::endl;
+  std::cerr << (stop-start).count() << std::endl;
   
   return 0;
 }
