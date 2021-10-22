@@ -44,10 +44,10 @@ public:
 	       std::function<void(TLS&)> after
 	       ) {
            std::vector<std::thread> thrds;
-           std::vector<TLS> tls;
+           std::mutex m
            for(int x=beg; x < increment; ++x) {
              thrds[x] = std::thread(
-               [=, &f, &before, &after, &afterMutex](){
+               [=, &f, &before, &after, &m](){
                  TLS tls;
                  before(tls);
                  for (size_t i=beg; i < end; i+= increment) {
@@ -55,7 +55,7 @@ public:
                  }
                  after(tls);
                }
-             )
+             );
            }
           }
 };
