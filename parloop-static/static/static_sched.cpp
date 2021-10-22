@@ -22,7 +22,7 @@ float f4(float x, int intensity);
 }
 #endif
 
-float get_function_value(int f,float x, int intensity) {
+float get_f(int f, float x, int intensity) {
     switch(f) {
         case 1:
             return f1(x, intensity);
@@ -55,31 +55,30 @@ int main (int argc, char* argv[]) {
     int nbthreads = atoi(argv[6]);
     float x = 0.0;
     
-
     auto start = std::chrono::steady_clock::now();
     float t1 = (b-a) / n;
-    float temp = 0.0f;
+    float mult = 0.0f;
 
     SeqLoop s1; 
 
-    s1.set_thread_count(nbthreads);
+    s1.thread_count(nbthreads);
 
-    s1.parfor_parallel<float>(0, n, 1,
-    [&](float& tls) -> void{ // Before
+    s1.parfor2<float>(0, n, 1,
+    [&](float& tls) -> void{
         tls = 0;
     },
     [&](int i, float& tls) -> void{
         float x_value = a + (i + 0.5f) * t1;
-        tls += get_function_value(functionID, x_value, intensity);
+        tls += functionID(functionID, x_value, intensity);
     },
-    [&](float& tls) -> void{ // After
-        temp += tls;
+    [&](float& tls) -> void{
+        mult += tls;
     }
     );
 
-    x = t1 * temp;
+    x = t1 * mult;
 
-    std::cout << x;
+    std::cout << x << std::endl;
 
     auto finish = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed = finish-start;

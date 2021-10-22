@@ -3,6 +3,8 @@
                 "thread": "cpp",
                 "vector": "cpp",
                 "functional": "cpp",
-                "ostream": "cpp"
+                "ostream": "cpp",
+                "list": "cpp",
+                "xstring": "cpp"
         }
 }

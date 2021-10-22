@@ -61,7 +61,7 @@ public:
     static void f_helper(size_t id_thread, std::function<void(int, TLS&)> f, TLS& tls, size_t part_size, size_t total_n, size_t total_threads, std::function<void(TLS&)> before) {
       before(tls);  
       int thread_end = (id_thread + 1) * part_size;
-      if (id_thread == total_threads) { // Last part
+      if (id_thread == total_threads) {
         thread_end = total_n;
       }
       
@@ -70,27 +70,22 @@ public:
       }
     }
     
-    // New version of parfor
     template<typename TLS>
-    void parfor_parallel (size_t beg, size_t end, size_t increment,
+    void parfor2 (size_t beg, size_t end, size_t increment,
           std::function<void(TLS&)> before,
           std::function<void(int, TLS&)> f,
           std::function<void(TLS&)> after
           ) {
       std::vector<TLS> tlss (threads);
       
-        
-      
       size_t total_n = end - beg;
-      size_t part_size = total_n / threads; // least number of parts each thread calculates. Last part may be larger
-      
-      // Create threads
+      size_t part_size = total_n / threads; 
+
       for (size_t id=0; id < threads; id+= 1) {
         std::thread new_thread (f_helper<TLS>, id, f, std::ref(tlss[id]), part_size, total_n, threads, before);
         worker_threads.push_back(std::move(new_thread));
       }
       
-      // Wait for all worker threads to finish
       for (auto & t : worker_threads) {
         if (t.joinable()) {
             t.join();
@@ -100,13 +95,11 @@ public:
       for (TLS tls : tlss) {
         after(tls);
       }
-      
     }
     
-    void set_thread_count(int count) { // Sets the number of threads for parallel parfor
+    void thread_count(int count) { 
       this -> threads = count;
     }
-    
 };
 
 #endif
