@@ -37,7 +37,7 @@ public:
   /// Once the iterations are complete, each thread will execute after
   /// on the TLS object. No two thread can execute after at the same time.
   template<typename TLS>
-  void parfor (size_t beg, size_t end, size_t increment,
+  void parfor (size_t beg, size_t end, int increment,
 	       std::function<void(TLS&)> before,
 	       std::function<void(int, TLS&)> f,
 	       std::function<void(TLS&)> after
