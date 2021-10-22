@@ -70,7 +70,7 @@ int main (int argc, char* argv[]) {
     },
     [&](int i, float& tls) -> void{
         float x_value = a + (i + 0.5f) * t1;
-        tls += get_function_value(fuctionID, x_value, intensity);
+        tls += get_function_value(functionID, x_value, intensity);
     },
     [&](float& tls) -> void{ // After
         temp += tls;
