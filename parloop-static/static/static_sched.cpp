@@ -58,8 +58,8 @@ int main (int argc, char* argv[]) {
   }
 
   std::cout<<x<<std::endl;
-  auto finish = std::chrono::system_clock::now();
-  std::chrono::duration<double> time_elapsed = finish - start;
+  auto finish = std::chrono::steady_clock::now();
+  std::chrono::duration<double> time_elapsed = finish-start;
   std::cerr<<time_elapsed.count();
   return 0;
 }
