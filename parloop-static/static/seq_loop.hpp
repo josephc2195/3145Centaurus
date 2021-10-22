@@ -45,7 +45,7 @@ public:
 	       std::function<void(TLS&)> after
 	       ) {
            std::vector<std::thread> thrds;
-           std::mutex m
+           std::mutex m;
            for (int x = beg; x < increment; ++x) {
              thrds[x] = std::thread(
                [=, &f, &before, &after, &m](){
