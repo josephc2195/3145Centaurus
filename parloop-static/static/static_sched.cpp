@@ -4,6 +4,8 @@
 #include <string.h>
 #include <chrono>
 #include <cmath>
+#include <thread>
+#include <vector>
 #include "seq_loop.hpp"
 
 
@@ -55,6 +57,8 @@ int main (int argc, char* argv[]) {
     
 
     auto start = std::chrono::steady_clock::now();
+    float t1 = (b-a) / n;
+    float temp = 0.0f;
 
     SeqLoop sl; 
 
@@ -65,7 +69,7 @@ int main (int argc, char* argv[]) {
         tls = 0;
     },
     [&](int i, float& tls) -> void{
-        float x_value = lowerBound + (i + 0.5f) * start;
+        float x_value = a + (i + 0.5f) * start;
         tls += get_function_value(fuctionID, x_value, intensity);
     },
     [&](float& tls) -> void{ // After
@@ -73,7 +77,7 @@ int main (int argc, char* argv[]) {
     }
     );
 
-    result = start + temp;
+    result = start * temp;
 
     std::cout << result;
 
