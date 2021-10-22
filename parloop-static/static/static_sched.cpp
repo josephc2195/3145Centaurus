@@ -43,46 +43,46 @@ int main (int argc, char* argv[]) {
   std::mutex mtx;
   
   SeqLoop sl; 
-    if(functionid == 1){ 
+    if(functionID == 1){ 
       sl.parfor(0, n, nbthreads,
 	        [&](int i) -> void{
 	          mtx.lock();
-	          x = t1* f1(a+((i+.5)*(t1), intensity);
+	          x = t1* f1(a+((i+.5)*t1), intensity);
 	          integral = x + integral;
 	          mtx.unlock();
 	        }  
 	);  	
-  } else if(functionid == 2){
+  } else if(functionID == 2){
       sl.parfor(0, n, nbthreads,
 	        [&](int i) -> void{
 	          mtx.lock();
-	          x = t1 * f2(a+((i+.5)*(t1), intensity);
+	          x = t1 * f2(a+((i+.5)*t1), intensity);
 	          integral = x + integral;
 	          mtx.unlock();
 	        }  
 	);  	
-  } else if(functionid == 3){
+  } else if(functionID == 3){
       sl.parfor(0, n, nbthreads,
 	        [&](int i) -> void{
 	          mtx.lock();
-	          x = t1 * f3(a+((i+.5)*(t1), intensity);
+	          x = t1 * f3(a+((i+.5)*t1), intensity);
 	          integral = x + integral;
 	          mtx.unlock();
 	        }  
 	);  	
-  } else if(functionid == 4){
+  } else if(functionID == 4){
       sl.parfor(0, n, nbthreads,
 	        [&](int i) -> void{
 	          mtx.lock();
-	          x = t1 * f4(a+((i+.5)*(t1), intensity);
+	          x = t1 * f4(a+((i+.5)*t1), intensity);
 	          integral = x + integral;
 	          mtx.unlock();
 	        }  
 	);  	
     }
-    
+
   std::cout<<integral<<std::endl; 
   auto finish = std::chrono::system_clock::now();
-  std::cerr<<std::chrono::duration_cast<std::chrono::microseconds> (finish - start).count();
+  std::cerr<<(finish - start).count();
   return 0;
 }
