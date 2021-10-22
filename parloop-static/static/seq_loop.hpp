@@ -2,6 +2,8 @@
 #define __SEQ_LOOP_H
 
 #include <functional>
+#include <vector>
+#include <thread>
 
 class SeqLoop {
 public:
@@ -41,14 +43,21 @@ public:
 	       std::function<void(int, TLS&)> f,
 	       std::function<void(TLS&)> after
 	       ) {
-    TLS tls;
-    before(tls);    
-    for (size_t i=beg; i<end; i+= increment) {
-      f(i, tls);
-    }
-    after(tls);
-  }
-  
+           std::vector<std::thread> thrds;
+           std::vector<TLS> tls;
+           for(int x=beg; x < increment; ++x) {
+             thrds[x] = std::thread(
+               [=, &f, &before, &after, &afterMutex](){
+                 TLS tls;
+                 before(tls);
+                 for (size_t i=beg; i < end; i+= increment) {
+                   f(i, tls);
+                 }
+                 after(tls);
+               }
+             )
+           }
+          }
 };
 
 #endif

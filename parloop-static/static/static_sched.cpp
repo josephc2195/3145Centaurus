@@ -44,7 +44,9 @@ int main (int argc, char* argv[]) {
   SeqLoop s1;
 
   s1.parfor<float>(
-      0, n, 1, nbthreads,
+      0, 
+      n, 
+      1,
       [&](float& tls) -> void {
           tls = 0.0;
       },
@@ -64,9 +66,7 @@ int main (int argc, char* argv[]) {
           case 4:
               tls += f4(x, intensity);
               break;
-
           }
-
       },
           [&](float& tls) -> void {
           sum += tls;
