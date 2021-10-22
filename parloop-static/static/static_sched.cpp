@@ -33,56 +33,33 @@ int main (int argc, char* argv[]) {
   float n = atof(argv[4]);
   int intensity = atoi(argv[5]);
   int nbthreads = atoi(argv[6]);
-  float x = 0;
-  float integral = 0;
-  float t1 = (b - a) / n;
-  float sum = 0;
+  float x = 0.0;
+  
 
   auto start = std::chrono::steady_clock::now();
 
-  std::mutex mtx;
-  
   SeqLoop sl; 
-    if(functionID == 1){ 
-      sl.parfor(0, n, nbthreads,
-	        [&](int i) -> void{
-	          mtx.lock();
-	          x = t1* f1(a+((i+.5)*t1), intensity);
-	          integral = x + integral;
-	          mtx.unlock();
-	        }  
-	);  	
-  } else if(functionID == 2){
-      sl.parfor(0, n, nbthreads,
-	        [&](int i) -> void{
-	          mtx.lock();
-	          x = t1 * f2(a+((i+.5)*t1), intensity);
-	          integral = x + integral;
-	          mtx.unlock();
-	        }  
-	);  	
-  } else if(functionID == 3){
-      sl.parfor(0, n, nbthreads,
-	        [&](int i) -> void{
-	          mtx.lock();
-	          x = t1 * f3(a+((i+.5)*t1), intensity);
-	          integral = x + integral;
-	          mtx.unlock();
-	        }  
-	);  	
-  } else if(functionID == 4){
-      sl.parfor(0, n, nbthreads,
-	        [&](int i) -> void{
-	          mtx.lock();
-	          x = t1 * f4(a+((i+.5)*t1), intensity);
-	          integral = x + integral;
-	          mtx.unlock();
-	        }  
-	);  	
-    }
 
-  std::cout<<integral<<std::endl; 
+  switch(functionID) {
+  case 1:
+    x = sl.parforThreads(a, b, n, intensity, nbthreads, f1);
+    break;
+  case 2:
+    x = sl.parforThreads(a, b, n, intensity, nbthreads, f2); 
+    break;
+  case 3:
+    x = sl.parforThreads(a, b, n, intensity, nbthreads, f3);
+    break;
+  case 4:
+    x = sl.parforThreads(a, b, n, intensity, nbthreads, f4);
+    break;
+  default:
+    std::cerr<<"Invalid function ID."<<std::endl;
+  }
+
+  std::cout<<x<<std::endl;
   auto finish = std::chrono::system_clock::now();
-  std::cerr<<(finish - start).count();
+  std::chrono::duration<double> time_elapsed = finish - start;
+  std::cerr<<time_elapsed.count();
   return 0;
 }

@@ -69,6 +69,42 @@ public:
              );
            }
           }
+  
+  float parforThreads (float lowerBound, float upperBound, int numOfPoints, int intensity, int nbthreads, std::function<float(float, int)> f) {
+    if(nbthreads == 0)
+      nbthreads = 1;
+
+    int interval = 0;
+    float finalValue = 0.0;
+
+    while((numOfPoints % nbthreads) != 0) {
+      nbthreads++;
+    }
+
+    interval = numOfPoints / nbthreads;
+    std::vector<std::thread> threads (nbthreads);
+
+    for(int j = 0; j < nbthreads; j++) {
+      size_t start = j*interval;
+      size_t finish = (interval*(j+1))-1;
+      threads.push_back(std::thread(parfor, start, finish, 1,
+			       [&](float& tls) -> void{
+				 tls = 0.0;
+			       },
+			       [&](int i, float& tls) -> void{
+				 float x = lowerBound + (i + 0.5) * (((upperBound-lowerBound)/numOfPoints));
+				 tls += f(x, intensity);
+			       },
+			       [&](float tls) -> void{
+				 finalValue += ((upperBound-lowerBound)/numOfPoints) * tls;
+			       }));
+    }
+
+    for(auto& t: threads)
+      t.join();
+
+    return finalValue;
+  }
 };
 
 #endif
