@@ -20,6 +20,24 @@ float f4(float x, int intensity);
 }
 #endif
 
+float get_function_value(int f,float x, int intensity) {
+    switch(f) {
+        case 1:
+            return f1(x, intensity);
+            break;
+        case 2:
+            return f2(x, intensity);
+            break;
+        case 3:
+            return f3(x, intensity);
+            break;
+        case 4:
+            return f4(x, intensity);
+            break;
+        default:
+            return -1;
+    }
+}
 
 int main (int argc, char* argv[]) {
 
@@ -39,6 +57,8 @@ int main (int argc, char* argv[]) {
   auto start = std::chrono::steady_clock::now();
 
   SeqLoop sl; 
+
+  s1.set_thread_count 
 
   switch(functionID) {
   case 1:
