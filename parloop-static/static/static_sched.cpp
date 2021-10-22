@@ -38,44 +38,51 @@ int main (int argc, char* argv[]) {
   float t1 = (b - a) / n;
   float sum = 0;
 
-
   auto start = std::chrono::steady_clock::now();
 
-  SeqLoop s1;
-
-  s1.parfor<float>(
-      0, 
-      n, 
-      1,
-      [&](float& tls) -> void {
-          tls = 0.0;
-      },
-      [&](int i, float& tls) ->void {
-          float x = a + (i + .5) * t1;
-          switch (functionID)
-          {
-          case 1:
-              tls += f1(x, intensity);
-              break;
-          case 2:
-              tls += f2(x, intensity);
-              break;
-          case 3:
-              tls += f3(x, intensity);
-              break;
-          case 4:
-              tls += f4(x, intensity);
-              break;
-          }
-      },
-          [&](float& tls) -> void {
-          sum += tls;
-      });
-
-  std::cout << t1 * sum << std::endl;
-  auto stop = std::chrono::steady_clock::now();
-
-  std::cerr << (stop-start).count() << std::endl;
+  std::mutex mtx;
   
+  SeqLoop sl; 
+    if(functionid == 1){ 
+      sl.parfor(0, n, nbthreads,
+	        [&](int i) -> void{
+	          mtx.lock();
+	          x = t1* f1(a+((i+.5)*(t1), intensity);
+	          integral = x + integral;
+	          mtx.unlock();
+	        }  
+	);  	
+  } else if(functionid == 2){
+      sl.parfor(0, n, nbthreads,
+	        [&](int i) -> void{
+	          mtx.lock();
+	          x = t1 * f2(a+((i+.5)*(t1), intensity);
+	          integral = x + integral;
+	          mtx.unlock();
+	        }  
+	);  	
+  } else if(functionid == 3){
+      sl.parfor(0, n, nbthreads,
+	        [&](int i) -> void{
+	          mtx.lock();
+	          x = t1 * f3(a+((i+.5)*(t1), intensity);
+	          integral = x + integral;
+	          mtx.unlock();
+	        }  
+	);  	
+  } else if(functionid == 4){
+      sl.parfor(0, n, nbthreads,
+	        [&](int i) -> void{
+	          mtx.lock();
+	          x = t1 * f4(a+((i+.5)*(t1), intensity);
+	          integral = x + integral;
+	          mtx.unlock();
+	        }  
+	);  	
+    }
+    
+  std::cout<<integral<<std::endl; 
+  auto finish = std::chrono::system_clock::now();
+  std::cerr<<std::chrono::duration_cast<std::chrono::microseconds> (finish - start).count();
   return 0;
 }
