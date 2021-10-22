@@ -4,6 +4,7 @@
 #include <functional>
 #include <vector>
 #include <thread>
+#include <mutex>
 
 class SeqLoop {
 public:
@@ -45,7 +46,7 @@ public:
 	       ) {
            std::vector<std::thread> thrds;
            std::mutex m
-           for(int x=beg; x < increment; ++x) {
+           for (int x = beg; x < increment; ++x) {
              thrds[x] = std::thread(
                [=, &f, &before, &after, &m](){
                  TLS tls;
