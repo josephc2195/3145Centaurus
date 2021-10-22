@@ -69,7 +69,7 @@ int main (int argc, char* argv[]) {
         tls = 0;
     },
     [&](int i, float& tls) -> void{
-        float x_value = a + (i + 0.5f) * start;
+        float x_value = a + (i + 0.5f) * t1;
         tls += get_function_value(fuctionID, x_value, intensity);
     },
     [&](float& tls) -> void{ // After
@@ -77,7 +77,7 @@ int main (int argc, char* argv[]) {
     }
     );
 
-    x = start * temp;
+    x = t1 * temp;
 
     std::cout << x;
 
