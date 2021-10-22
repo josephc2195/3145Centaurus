@@ -16,10 +16,20 @@ public:
   /// be in parallel
   void parfor (size_t beg, size_t end, size_t inc,
 	       std::function<void(int)> f) {
-    for (size_t i=beg; i<end; i+= inc) {
-      f(i);
+            std::thread threads[inc];
+            for (int t = beg; t < inc; ++t) {
+                threads[t] = std::thread(
+                    [=, &f](){
+                        for (size_t i = t; i < end; i += inc) {
+                            f(i);
+                        }
+                    }
+                );
+            }
+            for (size_t i = 0; i < inc; ++i) {
+                threads[i].join();
+            }
     }
-  }
 
   /// @brief execute the function f multiple times with different
   /// parameters possibly in parallel
