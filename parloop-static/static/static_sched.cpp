@@ -60,7 +60,7 @@ int main (int argc, char* argv[]) {
     float t1 = (b-a) / n;
     float temp = 0.0f;
 
-    SeqLoop sl; 
+    SeqLoop s1; 
 
     s1.set_thread_count(nbthreads);
 
@@ -77,12 +77,10 @@ int main (int argc, char* argv[]) {
     }
     );
 
-    result = start * temp;
+    x = start * temp;
 
-    std::cout << result;
+    std::cout << x;
 
-
-    std::cout<<x<<std::endl;
     auto finish = std::chrono::steady_clock::now();
     std::chrono::duration<double> time_elapsed = finish-start;
     std::cerr<<time_elapsed.count();
