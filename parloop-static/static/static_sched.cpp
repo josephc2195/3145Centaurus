@@ -41,45 +41,46 @@ float get_function_value(int f,float x, int intensity) {
 
 int main (int argc, char* argv[]) {
 
-  if (argc < 7) {
-    std::cerr<<"usage: "<<argv[0]<<" <functionid> <a> <b> <n> <intensity> <nbthreads>"<<std::endl;
-    return -1;
-  }
-  int functionID = atoi(argv[1]);
-  float a = atoi(argv[2]);
-  float b = atoi(argv[3]);
-  float n = atof(argv[4]);
-  int intensity = atoi(argv[5]);
-  int nbthreads = atoi(argv[6]);
-  float x = 0.0;
-  
+    if (argc < 7) {
+        std::cerr<<"usage: "<<argv[0]<<" <functionid> <a> <b> <n> <intensity> <nbthreads>"<<std::endl;
+        return -1;
+    }
+    int functionID = atoi(argv[1]);
+    float a = atoi(argv[2]);
+    float b = atoi(argv[3]);
+    float n = atof(argv[4]);
+    int intensity = atoi(argv[5]);
+    int nbthreads = atoi(argv[6]);
+    float x = 0.0;
+    
 
-  auto start = std::chrono::steady_clock::now();
+    auto start = std::chrono::steady_clock::now();
 
-  SeqLoop sl; 
+    SeqLoop sl; 
 
-  s1.set_thread_count 
+    s1.set_thread_count(nbthreads);
 
-  switch(functionID) {
-  case 1:
-    x = sl.parforThreads(a, b, n, intensity, nbthreads, f1);
-    break;
-  case 2:
-    x = sl.parforThreads(a, b, n, intensity, nbthreads, f2); 
-    break;
-  case 3:
-    x = sl.parforThreads(a, b, n, intensity, nbthreads, f3);
-    break;
-  case 4:
-    x = sl.parforThreads(a, b, n, intensity, nbthreads, f4);
-    break;
-  default:
-    std::cerr<<"Invalid function ID."<<std::endl;
-  }
+    s1.parfor_parallel<float>(0, n, 1,
+    [&](float& tls) -> void{ // Before
+        tls = 0;
+    },
+    [&](int i, float& tls) -> void{
+        float x_value = lowerBound + (i + 0.5f) * start;
+        tls += get_function_value(fuctionID, x_value, intensity);
+    },
+    [&](float& tls) -> void{ // After
+        temp += tls;
+    }
+    );
 
-  std::cout<<x<<std::endl;
-  auto finish = std::chrono::steady_clock::now();
-  std::chrono::duration<double> time_elapsed = finish-start;
-  std::cerr<<time_elapsed.count();
-  return 0;
+    result = start + temp;
+
+    std::cout << result;
+
+
+    std::cout<<x<<std::endl;
+    auto finish = std::chrono::steady_clock::now();
+    std::chrono::duration<double> time_elapsed = finish-start;
+    std::cerr<<time_elapsed.count();
+    return 0;
 }
