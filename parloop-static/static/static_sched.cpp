@@ -69,7 +69,7 @@ int main (int argc, char* argv[]) {
     },
     [&](int i, float& tls) -> void{
         float x_value = a + (i + 0.5f) * t1;
-        tls += functionID(functionID, x_value, intensity);
+        tls += get_f(functionID, x_value, intensity);
     },
     [&](float& tls) -> void{
         mult += tls;
