@@ -49,7 +49,7 @@ int main (int argc, char* argv[]) {
                     [&](float& tls) -> void{
                       tls=0;
                     },
-                    [&](iint pass, float& tls) -> void {
+                    [&](int pass, float& tls) -> void {
                       int localprocessPointer = processPointer;
                       processPointer+=g;
 
@@ -58,7 +58,7 @@ int main (int argc, char* argv[]) {
                         int endLoop = localprocessPointer + g;
                         for(inc i = localprocessPointer; i < endLoop; i++)
                         {
-                          float x= a + ((i+.5)*ban);
+                          float x= a + ((i+.5)*t1);
                           tls+= f1(x, intensity);
                         }
                         localprocessPointer = processPointer;
@@ -66,7 +66,7 @@ int main (int argc, char* argv[]) {
                       }
                     },
                     [&](float tls) -> void{
-                      sum = tls * ban;
+                      sum = tls * t1;
                     }
                     );
     break;
@@ -85,7 +85,7 @@ int main (int argc, char* argv[]) {
                         int endLoop = localprocessPointer + g;
                         for(inc i = localprocessPointer; i < endLoop; i++)
                         {
-                          float x= a + ((i+.5)*ban);
+                          float x= a + ((i+.5)*t1);
                           tls+= f2(x, intensity);
                         }
                         localprocessPointer = processPointer;
@@ -93,7 +93,7 @@ int main (int argc, char* argv[]) {
                       }
                     },
                     [&](float tls) -> void{
-                      sum = tls * ban;
+                      sum = tls * t1;
                     }
                     );
     break;
@@ -112,7 +112,7 @@ int main (int argc, char* argv[]) {
                         int endLoop = localprocessPointer + g;
                         for(inc i = localprocessPointer; i < endLoop; i++)
                         {
-                          float x= a + ((i+.5)*ban);
+                          float x= a + ((i+.5)*t1);
                           tls+= f3(x, intensity);
                         }
                         localprocessPointer = processPointer;
@@ -120,7 +120,7 @@ int main (int argc, char* argv[]) {
                       }
                     },
                     [&](float tls) -> void{
-                      sum = tls * ban;
+                      sum = tls * t1;
                     }
                     );
     break;
@@ -139,7 +139,7 @@ int main (int argc, char* argv[]) {
                         int endLoop = localprocessPointer + g;
                         for(inc i = localprocessPointer; i < endLoop; i++)
                         {
-                          float x= a + ((i+.5)*ban);
+                          float x= a + ((i+.5)*t1);
                           tls+= f4(x, intensity);
                         }
                         localprocessPointer = processPointer;
@@ -147,7 +147,7 @@ int main (int argc, char* argv[]) {
                       }
                     },
                     [&](float tls) -> void{
-                      sum = tls * ban;
+                      sum = tls * t1;
                     }
                     );
     break;
@@ -159,7 +159,7 @@ int main (int argc, char* argv[]) {
 
   auto end = std::chrono::steady_clock::now();
 
-  
+
 
 
   return 0;
