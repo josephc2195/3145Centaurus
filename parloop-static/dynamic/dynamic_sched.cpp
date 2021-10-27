@@ -52,7 +52,7 @@ int main (int argc, char* argv[]) {
   
   auto start = std::chrono::system_clock::now();
 
-  int functionID = atoi(argv[1]);
+  int fID = atoi(argv[1]);
   float a = atoi(argv[2]);
   float b = atoi(argv[3]);
   float n = atof(argv[4]);
@@ -61,7 +61,7 @@ int main (int argc, char* argv[]) {
   int gran = atoi(argv[7]);
   float t1 = (b-a) / n;
 
-  float (*ptr)(float, int) = getFunc((int) a);
+  float (*ptr)(float, int) = getFunc((int) fID);
 
   for (int i = 0; i < nbthreads; i++) {
     threads.push_back(
