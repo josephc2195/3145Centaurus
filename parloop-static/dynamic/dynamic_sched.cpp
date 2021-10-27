@@ -161,7 +161,7 @@ int main (int argc, char* argv[]) {
 
   std::cout << std::chrono::duration_cast(end-start).count();
 
-  std::cer << sum << std::endl;
+  std::cerr << sum << std::endl;
 
   return 0;
 }
