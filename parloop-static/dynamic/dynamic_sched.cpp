@@ -24,7 +24,7 @@ float f4(float x, int intensity);
 }
 #endif
 
-ptr getFunction(int f) {
+ptr getFunc(int f) {
   switch (f) {
     case 1:
       return &f1;
@@ -39,73 +39,63 @@ ptr getFunction(int f) {
 
 int main (int argc, char* argv[]) {
 
-  // setup
-  auto start = std::chrono::system_clock::now();
   std::mutex mu1, mu2;
   std::vector<std::thread> threads;
   int count = 0;
-  float result = 0;
+  float sum = 0;
 
   if (argc < 8) {
     std::cerr<<"usage: "<<argv[0]<<" <functionid> <a> <b> <n> <intensity> <nbthreads> <granularity>"<<std::endl;
     return -1;
   }
 
-  // parse input
-  std::array<float, 7> vals;
+  
+  auto start = std::chrono::system_clock::now();
 
-  for (int i = 0; i < vals.size(); i++) {
-    vals[i] = atoi(argv[i + 1]);
-  }
+  int functionID = atoi(argv[1]);
+  float a = atoi(argv[2]);
+  float b = atoi(argv[3]);
+  float n = atof(argv[4]);
+  int intensity = atoi(argv[5]);
+  int nbthreads = atoi(argv[6]);
+  int gran = atoi(argv[7]);
+  float t1 = (b-a) / n;
 
-  // calculate coefficient
-  float co = (vals[2] - vals[1]) / vals[3];
+  float (*ptr)(float, int) = getFunc((int) a);
 
-  // get function
-  float (*ptr)(float, int) = getFunction((int) vals[0]);
-
-  // threads
-  for (int i = 0; i < vals[5]; i++) {
+  for (int i = 0; i < nbthreads; i++) {
     threads.push_back(
       std::thread([&](){ 
         
         float temp = 0;
-        while (count < vals[3]){
+        while (count < n){
           
-          // keep count of itteration
           mu1.lock();
           int local_count = count;
-          count+= vals[6];
+          count+= gran;
           mu1.unlock();
 
-          // do computation
-          for (int i  = local_count; i < local_count + vals[6] && i < vals[3]; i++){
-
-            temp += (*ptr)(vals[1] + ((i + .5) * co), vals[4]) * co;
-            
+          for (int i  = local_count; i < local_count + gran && i < n; i++){
+            temp += (*ptr)(a + ((i + .5) * t1), intensity) * t1;
           }
         }
 
-        // add results at the end
         mu2.lock();
-        result += temp;
+        sum += temp;
         mu2.unlock();
       })
     );
   }
 
-  // join threads
   for (auto & t : threads){
     t.join();
   }
 
-  // get runtime
-  auto end = std::chrono::system_clock::now();
-  std::chrono::duration<double> diff = end - start;
+  auto finish = std::chrono::system_clock::now();
+  std::chrono::duration<double> elapsed_time = finish - start;
 
-  // print results
-  std::cout << result << std::endl;
-  std::cerr << diff.count() << std::endl;
+  std::cout << sum << std::endl;
+  std::cerr << elapsed_time.count() << std::endl;
 
   return 0;
 }
