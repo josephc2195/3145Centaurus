@@ -159,9 +159,8 @@ int main (int argc, char* argv[]) {
 
   auto finish = std::chrono::steady_clock::now();
   std::chrono::duration<double> time_elapsed = finish-start;
-  std::cout << time_elapsed.count();
-
   std::cerr << sum << std::endl;
+  std::cout << time_elapsed.count();
 
   return 0;
 }
