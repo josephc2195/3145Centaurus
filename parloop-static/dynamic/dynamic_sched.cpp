@@ -159,5 +159,9 @@ int main (int argc, char* argv[]) {
 
   auto end = std::chrono::steady_clock::now();
 
+  std::cout << std::chrono::duration_cast(end-start).count();
+
+  std::cer << sum << std::endl;
+
   return 0;
 }
