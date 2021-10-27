@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "seq_loop.hpp"
-
+#include <atomic>
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,7 +40,127 @@ int main (int argc, char* argv[]) {
   SeqLoop s1;
 
   auto start = std::chrono::steady_clock::now();
+  std::atomic<int> processPointer = 0;
+
+
+  switch(fID) {
+    case 1:
+    s1.parfor<float>(0, nbthreads, 1, 
+                    [&](float& tls) -> void{
+                      tls=0;
+                    },
+                    [&](iint pass, float& tls) -> void {
+                      int localprocessPointer = processPointer;
+                      processPointer+=g;
+
+                      while(localprocessPointer < n)
+                      {
+                        int endLoop = localprocessPointer + g;
+                        for(inc i = localprocessPointer; i < endLoop; i++)
+                        {
+                          float x= a + ((i+.5)*ban);
+                          tls+= f1(x, intensity);
+                        }
+                        localprocessPointer = processPointer;
+                        processPointer += g;
+                      }
+                    },
+                    [&](float tls) -> void{
+                      sum = tls * ban;
+                    }
+                    );
+    break;
+
+    case 2:
+    s1.parfor<float>(0, nbthreads, 1, 
+                    [&](float& tls) -> void{
+                      tls=0;
+                    },
+                    [&](iint pass, float& tls) -> void {
+                      int localprocessPointer = processPointer;
+                      processPointer+=g;
+
+                      while(localprocessPointer < n)
+                      {
+                        int endLoop = localprocessPointer + g;
+                        for(inc i = localprocessPointer; i < endLoop; i++)
+                        {
+                          float x= a + ((i+.5)*ban);
+                          tls+= f2(x, intensity);
+                        }
+                        localprocessPointer = processPointer;
+                        processPointer += g;
+                      }
+                    },
+                    [&](float tls) -> void{
+                      sum = tls * ban;
+                    }
+                    );
+    break;
+
+    case 3:
+    s1.parfor<float>(0, nbthreads, 1, 
+                    [&](float& tls) -> void{
+                      tls=0;
+                    },
+                    [&](iint pass, float& tls) -> void {
+                      int localprocessPointer = processPointer;
+                      processPointer+=g;
+
+                      while(localprocessPointer < n)
+                      {
+                        int endLoop = localprocessPointer + g;
+                        for(inc i = localprocessPointer; i < endLoop; i++)
+                        {
+                          float x= a + ((i+.5)*ban);
+                          tls+= f3(x, intensity);
+                        }
+                        localprocessPointer = processPointer;
+                        processPointer += g;
+                      }
+                    },
+                    [&](float tls) -> void{
+                      sum = tls * ban;
+                    }
+                    );
+    break;
+
+    case 4:
+    s1.parfor<float>(0, nbthreads, 1, 
+                    [&](float& tls) -> void{
+                      tls=0;
+                    },
+                    [&](iint pass, float& tls) -> void {
+                      int localprocessPointer = processPointer;
+                      processPointer+=g;
+
+                      while(localprocessPointer < n)
+                      {
+                        int endLoop = localprocessPointer + g;
+                        for(inc i = localprocessPointer; i < endLoop; i++)
+                        {
+                          float x= a + ((i+.5)*ban);
+                          tls+= f4(x, intensity);
+                        }
+                        localprocessPointer = processPointer;
+                        processPointer += g;
+                      }
+                    },
+                    [&](float tls) -> void{
+                      sum = tls * ban;
+                    }
+                    );
+    break;
+
+    default: 
+    std::cerr<<"invalid functionID";
+    return -1;   
+  }
+
+  auto end = std::chrono::steady_clock::now();
+
   
+
 
   return 0;
 }
