@@ -27,6 +27,7 @@ int main (int argc, char* argv[]) {
 
   int m = atoi(argv[1]);
   int n = atoi(argv[2]);
+  OmpLoop loop;
 
   // get string data 
   char *X = new char[m];
@@ -35,6 +36,7 @@ int main (int argc, char* argv[]) {
 
   
   //insert LCS code here.
+  int L[m+1][n+1];
   int result = -1; // length of common subsequence
 
 
