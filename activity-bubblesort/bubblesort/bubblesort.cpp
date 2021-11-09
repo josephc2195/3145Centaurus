@@ -19,11 +19,10 @@ extern "C" {
 #endif
 
 
-void swap(int* arr, int i, int j)
-{
-  int temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
+void swap(int* a, int b, int c) {
+  int temp = a[b];
+  a[b] = a[c];
+  a[c] = temp;
 }
 
 int main (int argc, char* argv[]) {
@@ -31,22 +30,20 @@ int main (int argc, char* argv[]) {
     return -1;
   }
 
+  auto start = std::chrono::system_clock::now();
+
   int n = atoi(argv[1]);
   int nbthreads = atoi(argv[2]);
 
   OmpLoop omp;
   omp.setNbThread(nbthreads);
   
-  // get arr data
-  int * arr = new int [n];
+  int *arr = new int [n];
   generateMergeSortData (arr, n);
   
-  std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
-  
-  //insert sorting code here.
-  int swapped = 1;
-  while (swapped) {
-    swapped = 0;
+  int cont = 1;
+  while(swapped) {
+    cont = 0;
     omp.parfor<int>(0, n, 1,
 		   [&](int& tls) -> void{
 		     
@@ -54,24 +51,19 @@ int main (int argc, char* argv[]) {
 		   [&](int i, int& tls) -> void{
 		     if (arr[i-1] > arr[i]) {
 		       swap(arr, i-1, i);
-		       swapped = 1;
+		       cont = 1;
 		     }
 		   },
-		     
 		   [&](int tls) -> void{
-		   
 	           }
 		 );
     n--;
   }
 
-  std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
-  std::chrono::duration<double> elpased_seconds = end-start;
-  
+  auto finish = std::chrono::system_clock::now();
+  std::chrono::duration<double> total_time = finish-start;
   checkMergeSortResult (arr, n);
-  std::cerr<<elpased_seconds.count()<<std::endl;
-  
-  delete[] arr;
-
+  std::cerr<<total_time.count()<<std::endl;
+  //delete[] arr;
   return 0;
 }
