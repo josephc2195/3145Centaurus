@@ -5,6 +5,11 @@
                 "functional": "cpp",
                 "ostream": "cpp",
                 "list": "cpp",
-                "xstring": "cpp"
+                "xstring": "cpp",
+                "array": "cpp",
+                "initializer_list": "cpp",
+                "type_traits": "cpp",
+                "xhash": "cpp",
+                "xutility": "cpp"
         }
 }

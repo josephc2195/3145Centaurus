@@ -24,47 +24,43 @@ extern "C" {
 
 int main (int argc, char* argv[]) {
 
-  // start timer
-  auto start = std::chrono::system_clock::now();
-
   if (argc < 4) { std::cerr<<"usage: "<<argv[0]<<" <m> <n> <nbthreads>"<<std::endl;
     return -1;
   }
 
-  const int m = atoi(argv[1]);
-  const int n = atoi(argv[2]);  
+  auto start = std::chrono::system_clock::now();
 
-  // get string data 
+  int m = atoi(argv[1]);
+  int n = atoi(argv[2]);  
+
   char *X = new char[m];
   char *Y = new char[n];
+
   generateLCS(X, m, Y, n);
 
   //insert LCS code here.
   int result = -1; // length of common subsequence
 
-  const int size = 10000;
-  auto dynamic = new int[size][size];
+  int ten = 10000;
+  auto dynamic = new int[ten][ten];
 
-  for (int row = 1; row <= m ; row++) {
-    for (int col = 1; col <= n ; col++) {
-      dynamic[row][col] = -1;
+  for (int i = 1; i <= m ; i++) {
+    for (int j = 1; j <= n ; j++) {
+      dynamic[i][j] = -1;
     }
   }
 
   OmpLoop o1;
-  std::condition_variable cv;
+  std::condition_variable cond;
   std::mutex mu1, mu2;
   
-  // parfor loop
   o1.setNbThread(atoi(argv[3]));
-  o1.parfor<int>(
-    0, m + n + 1, 1,
+  o1.parfor<int>(0, m + n + 1, 1,
     [&](int & tls){
       
     },
     [&](int i, int & tls){
 
-      // get diag length
       int diag = 0;
       int val, row, col;
       std::unique_lock<std::mutex> lock(mu1);
@@ -83,7 +79,7 @@ int main (int argc, char* argv[]) {
         if (row == 0 || col == 0) continue;
         X[row - 1] == Y[col - 1] ? val = 1 : val = 0;
         
-        cv.wait(lock, [&](){
+        cond.wait(lock, [&](){
           return !(dynamic[row-1][col-1] < 0 || dynamic[row][col-1] < 0);
         });
 
@@ -91,7 +87,7 @@ int main (int argc, char* argv[]) {
           val = std::max(dynamic[row - 1][col], dynamic[row][col - 1]);
         
         dynamic[row][col] = val;
-        cv.notify_one();
+        cond.notify_one();
       }
     },
     [&](int & tls){
