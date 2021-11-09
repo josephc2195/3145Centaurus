@@ -41,7 +41,7 @@ int main (int argc, char* argv[]) {
   //insert LCS code here.
   int result = -1; // length of common subsequence
 
-  int ten = 10000;
+  const int ten = 10000;
   auto d = new int[ten][ten];
 
   for(int i = 1; i <= m ; i++) {
@@ -99,7 +99,7 @@ int main (int argc, char* argv[]) {
   checkLCS(X, m, Y, n, result);
 
   auto finish = std::chrono::system_clock::now();
-  std::chrono::duration<double> total_time = end - finish;
+  std::chrono::duration<double> total_time = finish - start;
   std::cerr << total_time.count() << std::endl;
   return 0;
 }
