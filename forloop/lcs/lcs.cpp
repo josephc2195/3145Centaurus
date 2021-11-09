@@ -42,11 +42,11 @@ int main (int argc, char* argv[]) {
   int result = -1; // length of common subsequence
 
   int ten = 10000;
-  auto dynamic = new int[ten][ten];
+  auto d = new int[ten][ten];
 
-  for (int i = 1; i <= m ; i++) {
-    for (int j = 1; j <= n ; j++) {
-      dynamic[i][j] = -1;
+  for(int i = 1; i <= m ; i++) {
+    for(int j = 1; j <= n ; j++) {
+      d[i][j] = -1;
     }
   }
 
@@ -59,34 +59,35 @@ int main (int argc, char* argv[]) {
     [&](int & tls){
       
     },
-    [&](int i, int & tls){
+    [&](int i, int &tls){
+      int find = 0;
+      int s, row, col;
 
-      int diag = 0;
-      int val, row, col;
       std::unique_lock<std::mutex> lock(mu1);
 
-      if (i < m) {
-        diag = i;
-      } else if (i >= m && i <= n) {
-        diag = m;
-      } else {
-        diag = (m + n) - i;
-      }
+      if(i>=m && i<=n)
+        find = m;
 
-      for (int j = 0; j <= diag; j++) {
-        i >= n ? (row = (i - n) + j, col = n - j) : (row = j, col = i - j);
+      else if(i<m)
+        find = i;
+      
+      else
+        find = (m+n) - i;
 
-        if (row == 0 || col == 0) continue;
-        X[row - 1] == Y[col - 1] ? val = 1 : val = 0;
+      for(int j=0; j<=find; j++) {
+        i>=n ? (row=(i-n) + j, col = n-j) : (row = j, col = i-j);
+
+        if(row == 0 || col == 0) continue;
+        X[row-1] == Y[col-1] ? s = 1 : s = 0;
         
         cond.wait(lock, [&](){
-          return !(dynamic[row-1][col-1] < 0 || dynamic[row][col-1] < 0);
+          return !(d[row-1][col-1] < 0 || d[row][col-1] < 0);
         });
 
-        val ? val = dynamic[row - 1][col - 1] + 1 :
-          val = std::max(dynamic[row - 1][col], dynamic[row][col - 1]);
+        s ? s = d[row - 1][col - 1] + 1 :
+          s = std::max(d[row - 1][col], d[row][col - 1]);
         
-        dynamic[row][col] = val;
+        d[row][col] = s;
         cond.notify_one();
       }
     },
@@ -94,15 +95,11 @@ int main (int argc, char* argv[]) {
       
     }
   );
-
-  result = dynamic[m][n];
+  result = d[m][n];
   checkLCS(X, m, Y, n, result);
 
-  // get runtime
-  auto end = std::chrono::system_clock::now();
-  std::chrono::duration<double> diff = end - start;
-  std::cerr << diff.count() << std::endl;
-
-
+  auto finish = std::chrono::system_clock::now();
+  std::chrono::duration<double> total_time = end - finish;
+  std::cerr << total_time.count() << std::endl;
   return 0;
 }
