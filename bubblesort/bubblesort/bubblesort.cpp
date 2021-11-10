@@ -57,12 +57,11 @@ int main (int argc, char* argv[]) {
 		   [&](int tls) -> void{
 	           }
 		 );
-    n--;
   }
 
   auto finish = std::chrono::system_clock::now();
   std::chrono::duration<double> total_time = finish-start;
-
+  checkMergeSortResult (arr, n);
   std::cerr<<total_time.count()<<std::endl;
 
   return 0;
