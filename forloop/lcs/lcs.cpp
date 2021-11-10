@@ -41,9 +41,10 @@ int main (int argc, char* argv[]) {
   //insert LCS code here.
   int result = -1; // length of common subsequence
 
-  const int ten = 10000;
-  auto d = new int[ten][ten];
-
+  // const int ten = 10000;
+  // auto d = new int[ten][ten];
+  
+  auto d = new int[m][n];
   for(int i = 1; i <= m ; i++) {
     for(int j = 1; j <= n ; j++) {
       d[i][j] = -1;
