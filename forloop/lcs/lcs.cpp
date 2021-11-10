@@ -30,8 +30,8 @@ int main (int argc, char* argv[]) {
 
   auto start = std::chrono::system_clock::now();
 
-  int m = atoi(argv[1]);
-  int n = atoi(argv[2]);  
+  const int m = atoi(argv[1]);
+  const int n = atoi(argv[2]);  
 
   char *X = new char[m];
   char *Y = new char[n];
@@ -43,7 +43,7 @@ int main (int argc, char* argv[]) {
 
   // const int ten = 10000;
   // auto d = new int[ten][ten];
-  
+
   auto d = new int[m][n];
   for(int i = 1; i <= m ; i++) {
     for(int j = 1; j <= n ; j++) {
