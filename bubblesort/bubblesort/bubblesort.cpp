@@ -52,11 +52,10 @@ int main (int argc, char* argv[]) {
 		     if (arr[i-1] > arr[i]) {
 		       swap(arr, i-1, i);
 		       cont = 1;
-           n--;
-
 		     }
 		   },
 		   [&](int tls) -> void{
+         n--;
 	           }
 		 );
   }
