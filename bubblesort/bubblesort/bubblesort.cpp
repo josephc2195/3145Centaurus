@@ -64,5 +64,7 @@ int main (int argc, char* argv[]) {
   std::chrono::duration<double> total_time = finish-start;
   checkMergeSortResult (arr, n);
   std::cerr<<total_time.count()<<std::endl;
+  delete[] arr;
+  
   return 0;
 }
