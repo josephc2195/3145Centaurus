@@ -4,12 +4,11 @@
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
-#include "omploop.hpp"
-
 #include <vector>
-#include <thread>
-#include <mutex>
-#include <condition_variable>
+#include <array>
+#include <chrono>
+#include <algorithm>
+#include "omploop.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,85 +21,93 @@ extern "C" {
 }
 #endif
 
+void LCS (int a, int b, int m, int n, char* U, char* W, int** C_arr) {
+
+    if (U[a - 1] == W[b - 1]) {
+        //printf("%s\n", "howdy 4");
+        C_arr[a][b] = (C_arr[a - 1][b - 1]) + 1;
+    }
+    else{
+        C_arr[a][b] = std::max(C_arr[a - 1][b], C_arr[a][b - 1]);
+    }
+    //return C_arr[a][b];
+}
+
 int main (int argc, char* argv[]) {
 
-  if (argc < 4) { std::cerr<<"usage: "<<argv[0]<<" <m> <n> <nbthreads>"<<std::endl;
-    return -1;
-  }
-
-  auto start = std::chrono::system_clock::now();
-
-  const int m = atoi(argv[1]);
-  const int n = atoi(argv[2]);  
-
-  char *X = new char[m];
-  char *Y = new char[n];
-
-  generateLCS(X, m, Y, n);
-
-  //insert LCS code here.
-  int result = -1; // length of common subsequence
-
-  // const int ten = 10000;
-  // auto d = new int[ten][ten];
-
-  auto d = new int[m][n];
-  for(int i = 1; i <= m ; i++) {
-    for(int j = 1; j <= n ; j++) {
-      d[i][j] = -1;
+    if (argc < 4) {
+        std::cerr << "usage: " << argv[0] << " <m> <n> <nbthreads>" << std::endl;
+        return -1;
     }
-  }
 
-  OmpLoop o1;
-  std::condition_variable cond;
-  std::mutex mu1, mu2;
-  
-  o1.setNbThread(atoi(argv[3]));
-  o1.parfor<int>(0, m + n + 1, 1,
-    [&](int & tls){
-      
-    },
-    [&](int i, int &tls){
-      int find = 0;
-      int s, row, col;
+    int m = atoi(argv[1]);
+    int n = atoi(argv[2]);
+    int nbthreads = atoi(argv[3]);
 
-      std::unique_lock<std::mutex> lock(mu1);
+    int answer = 0;
+    OmpLoop om;
 
-      if(i>=m && i<=n)
-        find = m;
+    // get string data
+    char *X = new char[m];
+    char *Y = new char[n];
+    generateLCS(X, m, Y, n);
+    //insert LCS code here.
 
-      else if(i<m)
-        find = i;
-      
-      else
-        find = (m+n) - i;
+    std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
 
-      for(int j=0; j<=find; j++) {
-        i>=n ? (row=(i-n) + j, col = n-j) : (row = j, col = i-j);
+    om.setNbThread(nbthreads);
 
-        if(row == 0 || col == 0) continue;
-        X[row-1] == Y[col-1] ? s = 1 : s = 0;
-        
-        cond.wait(lock, [&](){
-          return !(d[row-1][col-1] < 0 || d[row][col-1] < 0);
-        });
+    std::vector<std::vector<int>> C_a;
+    std::vector<int> parent;
 
-        s ? s = d[row - 1][col - 1] + 1 :
-          s = std::max(d[row - 1][col], d[row][col - 1]);
-        
-        d[row][col] = s;
-        cond.notify_one();
-      }
-    },
-    [&](int & tls){
-      
+    int **C_arr = new int *[m + 1];
+
+    for (int i = 0; i <= m; ++i) {
+        C_arr[i] = new int[n + 1];
+        C_arr[i][0] = 0;
     }
-  );
-  result = d[m][n];
-  checkLCS(X, m, Y, n, result);
+    for (int j = 0; j <= n; ++j) {
+        C_arr[0][j] = 0;
+    }
 
-  auto finish = std::chrono::system_clock::now();
-  std::chrono::duration<double> total_time = finish - start;
-  std::cerr << total_time.count() << std::endl;
-  return 0;
+    om.parfor<int>(0, nbthreads, 1,
+            [&](int &C) -> void {
+
+            },
+            [&](int i, int &C) -> void {
+                for(int a =1; a <= m; a++){
+                    int diagA =a;
+                    for(int b =1; b<=n; b++){
+                        LCS(diagA, b, m, n, X, Y, std::ref(C_arr));
+                        diagA--;
+                        if(diagA < 1)
+                            break;
+                    }
+                }
+
+                for (int b = 2; b <=n; b++){
+                    int diagB = b;
+                    for(int a =m; a > 0; a--){
+                        LCS(a, diagB, m, n, X, Y, std::ref(C_arr));
+                        diagB++;
+                        if(diagB > n)
+                            break;
+                    }
+                }
+            },
+            [&](int &C) -> void {
+                    C =0;
+            });
+
+    std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+    std::chrono::duration<double> elpased_seconds = end-start;
+
+    int result = C_arr[m][n];
+    checkLCS(X, m, Y, n, result);
+
+    std::cerr<<elpased_seconds.count()<<std::endl;
+    //std::cout<<answer<<std::endl;
+
+    return 0;
+
 }
