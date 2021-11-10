@@ -44,7 +44,7 @@ int main (int argc, char* argv[]) {
   int cont = 1;
   while(cont) {
     cont = 0;
-    omp.parfor<int>(0, arr.length(), 1,
+    omp.parfor<int>(0, n, 1,
 		   [&](int& tls) -> void{
 		     
 		   },
