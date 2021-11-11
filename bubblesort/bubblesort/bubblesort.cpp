@@ -41,32 +41,29 @@ int main (int argc, char* argv[]) {
   int *arr = new int [n];
   generateMergeSortData (arr, n);
   
-  omp.parfor<int>(0, n, 1,
-      [&](int& tls) -> void{
-      },
-      [&](int i, int& tls) -> void{
-        int cont = 1;
-        while(cont) {
-          cont = 0;
-          if (arr[i-1] > arr[i]) {
-            
-            swap(arr, i-1, i);
-            cont = 1;
-            n--;
-          }
-        }
-      },
-      [&](int& tls) -> void{
-            }
-    );
-  
-  
+  int cont = 1;
+  while(cont) {
+    cont = 0;
+    omp.parfor<int>(0, n, 1,
+		   [&](int& tls) -> void{
+		     
+		   },
+		   [&](int i, int& tls) -> void{
+		     if (arr[i-1] > arr[i]) {
+		       swap(arr, i-1, i);
+		       cont = 1;
+		     }
+		   },
+		   [&](int& tls) -> void{
+	           }
+		 );
+    n--;
+  }
 
   auto finish = std::chrono::system_clock::now();
   std::chrono::duration<double> total_time = finish-start;
   checkMergeSortResult (arr, n);
   std::cerr<<total_time.count()<<std::endl;
   delete[] arr;
-
   return 0;
 }
