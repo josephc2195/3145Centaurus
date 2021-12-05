@@ -9,7 +9,7 @@ int main(int argc, char*argv[]) {
     int pid, total;
     
     MPI_Comm_size(MPI_COMM_WORLD, &total);
-    MPI_Comm_rank(MPI_COMM_WORLD, &pid)
+    MPI_Comm_rank(MPI_COMM_WORLD, &pid);
     
     char host[256];
     int result = gethostname(host, sizeof(host));
