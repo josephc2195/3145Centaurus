@@ -14,7 +14,6 @@ int main(int argc, char*argv[]) {
     char host[256];
     int result = gethostname(host, sizeof(host));
     
-    int i = getpid();
-    std::cout <<"I am process " <<i<<" out of "<<total<< ". I am running on "<<host<<"\n";
+    std::cout <<"I am process " <<getpid()<<" out of "<<total<< ". I am running on "<<host<<"\n";
     MPI_Finalize();
 }
